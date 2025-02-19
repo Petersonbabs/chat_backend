@@ -7,7 +7,7 @@ const server = createServer(app)
 
 const io = new Server(server, {
     cors: {
-        origin: "*"
+        origin: "http://localhost:5173"
     }
 })
 
@@ -21,4 +21,14 @@ server.listen(PORT, ()=>{
 
 io.on("connection", (socket)=>{    
     console.log(socket.id + " just connected")
+
+    socket.on("sendMessage", (message)=>{
+        console.log(`${socket.id}: ${message}`);
+        io.emit("receiveMessage", message) // broadcast all sockets
+    })
+
+    socket.on("disconnect", ()=>{
+        console.log(socket.id + " disconnected");
+        
+    })
 })
